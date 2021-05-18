@@ -3,16 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class GerenciadorDeClientes extends Thread {
-	
+	private Date datatual;
 	private Socket cliente;
 	private String nomeCliente;
 	private PrintWriter escritor;
@@ -23,6 +20,7 @@ public class GerenciadorDeClientes extends Thread {
 		this.cliente = cliente;
 		start();
 	}
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 	/**
 	 * 
 	 */
@@ -45,15 +43,13 @@ public class GerenciadorDeClientes extends Thread {
 						escritor.println("O cliente informado nao existe");
 					}else {
 						msgEnviada = leitor.readLine();
-						destinatario.getEscritor().println(this.nomeCliente + " Disse " + msgEnviada);
-						System.out.println(this.nomeCliente + " Disse " + msgEnviada);
+						datatual = new Date();
+						destinatario.getEscritor().println( "[ " + sdf.format(datatual)+ " ]" + this.nomeCliente.toUpperCase() + " DISSE: " + msgEnviada);
+						System.out.println( "[ " + sdf.format(datatual)+ " ] " + this.nomeCliente.toUpperCase() + " DISSE: " + msgEnviada);
 
 					}
 				}else if(msg.equalsIgnoreCase(Comandos.LISTA_USUARIOS)){
 					atualizarListaUsuarios(this);
-				}else{
-
-					escritor.println(this.nomeCliente + ", Voce disse : " + msg);
 				}
 			}
 			
@@ -76,7 +72,7 @@ public class GerenciadorDeClientes extends Thread {
 				escritor.println(Comandos.LOGIN_NEGADO);
 			}else{
 				escritor.println(Comandos.LOGIN_ACEITO);
-				escritor.println(this.nomeCliente);
+				escritor.println("CONECTADO " + this.nomeCliente.toUpperCase());
 				clientes.put(this.nomeCliente, this);
 				for(String cliente: clientes.keySet()){
 					atualizarListaUsuarios(clientes.get(cliente));
@@ -112,7 +108,5 @@ public class GerenciadorDeClientes extends Thread {
 	public String getNomeCliente() {
 		return nomeCliente;
 	}
-	//	public BufferedReader getLeitor() {
-//		return leitor;
-//	}
+
 }

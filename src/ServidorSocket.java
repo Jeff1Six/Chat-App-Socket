@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -9,9 +10,8 @@ public class ServidorSocket {
 		
 		try {
 			System.out.println("Iniciando o servidor");
-			servidor = new ServerSocket(9999);
+			servidor = new ServerSocket(8084);
 			System.out.println("Servidor iniciado");
-			
 			while(true) {
 				Socket cliente = servidor.accept();
 				new GerenciadorDeClientes(cliente);

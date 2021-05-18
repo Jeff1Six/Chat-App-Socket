@@ -10,16 +10,21 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ClienteSocketSwing extends JFrame {
 
-
+	private Date datatual;
 	private JTextArea taEditor = new JTextArea("Digite sua mensagem");
 	private JTextArea taVisor = new JTextArea();
 	private JList liUsuarios = new JList();
 	private PrintWriter escritor;
 	private BufferedReader leitor;
 	private JScrollPane scrollTaVisor = new JScrollPane(taVisor);
+
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
 
 	public ClienteSocketSwing(){
 		setTitle("Chat com Sockets");
@@ -72,7 +77,8 @@ public class ClienteSocketSwing extends JFrame {
 					}
 					Object usuario = liUsuarios.getSelectedValue();
 					if(usuario != null){
-						taVisor.append("EU: ");
+						datatual = new Date();
+						taVisor.append("[ " + sdf.format(datatual)+ " ] EU: ");
 						taVisor.append(taEditor.getText());
 						taVisor.append("\n");
 
@@ -99,7 +105,7 @@ public class ClienteSocketSwing extends JFrame {
 
 	public void iniciarChat() {
 		try {
-			final Socket cliente = new Socket ("localhost" , 9999);
+			final Socket cliente = new Socket ("127.0.107" , 8084);
 			escritor = new PrintWriter(cliente.getOutputStream(), true);
 			leitor = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
 		}catch (UnknownHostException e) {
