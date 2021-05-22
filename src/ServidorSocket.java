@@ -1,3 +1,5 @@
+import db.DB;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -6,8 +8,8 @@ import java.net.Socket;
 public class ServidorSocket {
 	
 	public static void main(String[] args) {
+
 		ServerSocket servidor = null;
-		
 		try {
 			System.out.println("Iniciando o servidor");
 			servidor = new ServerSocket(8084);

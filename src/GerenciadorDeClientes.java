@@ -1,8 +1,14 @@
+import db.DB;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,19 +20,25 @@ public class GerenciadorDeClientes extends Thread {
 	private String nomeCliente;
 	private PrintWriter escritor;
 	private BufferedReader leitor;
-	private static final Map<String,GerenciadorDeClientes> clientes = new HashMap<String,GerenciadorDeClientes>();
+	private static final Map<String, GerenciadorDeClientes> clientes = new HashMap<String, GerenciadorDeClientes>();
 	public String msgEnviada;
+	private Connection conn = null;
+	private Statement st = null;
+	private ResultSet rs = null;
+
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+
+
+
 	public GerenciadorDeClientes(Socket cliente) {
 		this.cliente = cliente;
 		start();
 	}
-	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-	/**
-	 * 
-	 */
 	@Override
 	public void run() {
 		try {
+
 			 leitor = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
 			 escritor = new PrintWriter(cliente.getOutputStream(), true);
 			 efetuarLogin();
@@ -80,10 +92,8 @@ public class GerenciadorDeClientes extends Thread {
 				break;
 			}
 		}
-
-
-
 	}
+
 
 	private void atualizarListaUsuarios(GerenciadorDeClientes cliente) {
 		StringBuffer str = new StringBuffer();
