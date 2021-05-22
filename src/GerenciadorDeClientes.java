@@ -5,14 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GerenciadorDeClientes extends Thread {
 	private Date datatual;
@@ -23,12 +19,11 @@ public class GerenciadorDeClientes extends Thread {
 	private static final Map<String, GerenciadorDeClientes> clientes = new HashMap<String, GerenciadorDeClientes>();
 	public String msgEnviada;
 	private Connection conn = null;
-	private Statement st = null;
+	private PreparedStatement st = null;
 	private ResultSet rs = null;
-
+	private String nomeUsuario;
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-
+	private String nomeConectado;
 
 
 	public GerenciadorDeClientes(Socket cliente) {
@@ -77,11 +72,13 @@ public class GerenciadorDeClientes extends Thread {
 
 		while(true){
 			escritor.println(Comandos.LOGIN);
-			this.nomeCliente = leitor.readLine().toLowerCase().replaceAll("," , "");
+			this.nomeCliente = leitor.readLine().replaceAll("," , "");
 			if(this.nomeCliente.equalsIgnoreCase("null") || this.nomeCliente.isEmpty()){
 				escritor.println(Comandos.LOGIN_NEGADO);
 			}else if(clientes.containsKey(this.nomeCliente)){
 				escritor.println(Comandos.LOGIN_NEGADO);
+			}else if(login(nomeCliente) == false){
+				escritor.println(Comandos.LOGIN_NEGADO_USER_NAO_CADASTRADO);
 			}else{
 				escritor.println(Comandos.LOGIN_ACEITO);
 				escritor.println("CONECTADO " + this.nomeCliente.toUpperCase());
@@ -93,7 +90,30 @@ public class GerenciadorDeClientes extends Thread {
 			}
 		}
 	}
+	public boolean login(String user) {
+		System.out.println(user);
+		String sql = "SELECT * FROM `tbl_usuario` WHERE login_usuario = ?";
+		try {
+			conn = DB.getConnection();
+			st = conn.prepareStatement(sql);
+			st.setString(1, user);
+			rs = st.executeQuery();
+			if (rs.next()) {
+				return true;
+			}else{
+				return false;
+			}
+		} catch (SQLException e) {
+			System.out.println("ERRO!\n" + e);
 
+		}
+		DB.closeConnection();
+		DB.closeStatement(st);
+		DB.CloseResultSet(rs);
+		return false;
+
+
+	}
 
 	private void atualizarListaUsuarios(GerenciadorDeClientes cliente) {
 		StringBuffer str = new StringBuffer();

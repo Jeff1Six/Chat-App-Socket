@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,6 +25,7 @@ public class ClienteSocketSwing extends JFrame {
 	private PrintWriter escritor;
 	private BufferedReader leitor;
 	private JScrollPane scrollTaVisor = new JScrollPane(taVisor);
+
 
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
@@ -146,6 +150,8 @@ public class ClienteSocketSwing extends JFrame {
 					escritor.println(login);
 				}else if (mensagem.equals(Comandos.LOGIN_NEGADO)){
 					JOptionPane.showMessageDialog(ClienteSocketSwing.this, "O login e invalido");
+				}else if (mensagem.equals(Comandos.LOGIN_NEGADO_USER_NAO_CADASTRADO)){
+					JOptionPane.showMessageDialog(ClienteSocketSwing.this, "USUARIO NAO CADASTRADO NA BASE DE DADOS");
 				}else if (mensagem.equals(Comandos.LOGIN_ACEITO)){
 					atualizarListaUsuarios();
 				}else{
