@@ -21,9 +21,7 @@ public class GerenciadorDeClientes extends Thread {
 	private Connection conn = null;
 	private PreparedStatement st = null;
 	private ResultSet rs = null;
-	private String nomeUsuario;
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-	private String nomeConectado;
 
 
 	public GerenciadorDeClientes(Socket cliente) {
