@@ -18,7 +18,6 @@ import java.util.Date;
 
 public class ClienteSocketSwing extends JFrame {
 
-	private Date datatual;
 	private JTextArea taEditor = new JTextArea("Digite sua mensagem");
 	private JTextArea taVisor = new JTextArea();
 	private JList liUsuarios = new JList();
@@ -26,6 +25,7 @@ public class ClienteSocketSwing extends JFrame {
 	private BufferedReader leitor;
 	private JScrollPane scrollTaVisor = new JScrollPane(taVisor);
 
+	private Date datatual;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
@@ -132,6 +132,7 @@ public class ClienteSocketSwing extends JFrame {
 	}
 
 	private void atualizarListaUsuarios() {
+
 		escritor.println(Comandos.LISTA_USUARIOS);
 	}
 
